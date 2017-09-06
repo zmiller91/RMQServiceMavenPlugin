@@ -3,20 +3,18 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.definitions;
 
-import java.io.IOException;
+import com.zm.rmqsplugins.base.BaseDefinition;
 import java.nio.file.Paths;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  *
  * @author zmiller
  */
-public class ServiceDefinition extends BaseGenerator implements Definition {
+public class ServiceDefinition extends BaseDefinition {
     public String packageName;
     public ApiDefinition api;
     public ModelDefinition[] models;

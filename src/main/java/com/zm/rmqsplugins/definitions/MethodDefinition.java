@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.definitions;
 
+import com.zm.rmqsplugins.base.BaseDefinition;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -12,7 +13,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class MethodDefinition extends BaseGenerator implements Definition{
+public class MethodDefinition extends BaseDefinition{
     public String name;
     public String result;
     public PropertyDefinition[] params;
@@ -42,11 +43,11 @@ public class MethodDefinition extends BaseGenerator implements Definition{
     @Override
     public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
         
+        // Create the method signature
         StringBuilder sb = new StringBuilder();
-        String returnType = result == null ? "void" 
-                : ModelDefinition.getType(models.get(result));
-        
+        String returnType = result == null ? "void" : ModelDefinition.getType(models.get(result));
         sb.append(String.format("public %s %s(", returnType, name));
+        
         // Create the method parameters
         if(params != null) {
             for(PropertyDefinition p : params) {
@@ -60,6 +61,7 @@ public class MethodDefinition extends BaseGenerator implements Definition{
             }
         }
         
+        // Close the method definition
         sb.append(String.format(");\n", returnType, name));
         return sb.toString();
     }

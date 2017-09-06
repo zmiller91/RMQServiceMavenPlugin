@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.definitions;
 
+import com.zm.rmqsplugins.base.BaseDefinition;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 
@@ -12,7 +13,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class PropertyDefinition extends BaseGenerator implements Definition {
+public class PropertyDefinition extends BaseDefinition {
     public String name;
     public String ref;
 

@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.base;
 
+import com.zm.rmqsplugins.definitions.ModelDefinition;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 

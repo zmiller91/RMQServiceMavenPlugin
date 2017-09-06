@@ -3,21 +3,25 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.base;
 
+import com.zm.rmqsplugins.definitions.ModelDefinition;
+import com.zm.rmqsplugins.base.Definition;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Paths;
 import java.util.List;
+import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  *
  * @author zmiller
  */
-public abstract class BaseGenerator implements Generatable{
+public abstract class BaseDefinition implements Definition, Generatable {
     
-    void writeJavaFile(String path, String name, String body) throws MojoExecutionException {
+    
+    protected void writeJavaFile(String path, String name, String body) throws MojoExecutionException {
         try {
             File f = new File(path);
             if(!f.exists() && !f.mkdirs()) {

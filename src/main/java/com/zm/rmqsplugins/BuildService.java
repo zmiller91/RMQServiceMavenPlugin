@@ -16,6 +16,9 @@
  */
 package com.zm.rmqsplugins;
 
+import com.zm.rmqsplugins.definitions.ModelDefinition;
+import com.zm.rmqsplugins.definitions.ServiceDefinition;
+import com.zm.rmqsplugins.base.Definition;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import java.io.File;
@@ -37,7 +40,7 @@ import org.apache.maven.project.MavenProject;
  * @author zmiller
  */
 @Mojo( name = "build-service")
-public class ServiceGenerator extends AbstractMojo{
+public class BuildService extends AbstractMojo {
 
     @Parameter(readonly = true, defaultValue = "${project}")
     private MavenProject project;
@@ -48,7 +51,7 @@ public class ServiceGenerator extends AbstractMojo{
     @Parameter(defaultValue="${project.build.directory}/generated-sources/rmqsplugin", required=true)
     private File targetFolder;
     
-    private Gson gson = new Gson();
+    private final Gson gson = new Gson();
     
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -67,33 +70,21 @@ public class ServiceGenerator extends AbstractMojo{
         }
         
         catch(MojoExecutionException e) {
-            e.printStackTrace();
             throw e;
         }
         
         catch(Exception e) {
-            e.printStackTrace();
             throw new MojoExecutionException("Execution fialed", e);
         }  
     }
     
     private void collectModels(ModelDefinition[] models, Map<String, ModelDefinition> map) throws MojoExecutionException {
-        System.out.println("models");
         for(ModelDefinition md : models) {
             if(map.containsKey(md.name)) {
                 throw new MojoExecutionException("Duplicate model name found: " + md.getName());
             }
             map.put(md.getName(), md);
         }
-    }
-    
-    private void print(Definition d, int padding) {
-        String pad = "";
-        for(int i = 0; i < padding; i++) {
-            pad += " ";
-        }
-        
-        System.out.println(pad + d.getName());
     }
     
     private <T> T deserialize(Path path, Class<T> clazz) 

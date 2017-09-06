@@ -3,8 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.definitions;
 
+import com.zm.rmqsplugins.base.BaseDefinition;
+import com.zm.rmqsplugins.base.Importable;
 import com.google.inject.internal.util.Lists;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -17,7 +19,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class ModelDefinition extends BaseGenerator implements Definition, Importable {
+public class ModelDefinition extends BaseDefinition implements Importable {
     public String name;
     public PropertyDefinition[] properties;
     public String javaImport;
@@ -53,28 +55,25 @@ public class ModelDefinition extends BaseGenerator implements Definition, Import
 
     @Override
     public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
+        
+        StringBuilder sb = new StringBuilder();
         if(properties != null) {
-            
-            Set<String> localImports = new HashSet<>();
-            if(dependencyImports != null) {
-                localImports.addAll(dependencyImports);
-            }
             List<String> props = new ArrayList<>();
             List<String> setters = new ArrayList<>();
             List<String> getters = new ArrayList<>();
+            Set<String> localImports = new HashSet<>();
             
+            // Generate imports, create getters and setters
+            localImports.addAll(getImports());
             for(PropertyDefinition pd : properties) {
-                
                 String type = getType(models.get(pd.ref));
                 props.add("private " + pd.generate(pkg, models, base) + ";");
                 setters.add(createSetter(pd.name, type));
                 getters.add(createGetter(pd.name, type));
-                
-                // Create import statements
                 localImports.addAll(models.get(pd.ref).getImports());
             }
             
-            StringBuilder sb = new StringBuilder();
+            // Build the model
             sb.append(String.format("package %s;\n\n", pkg));
             appendAll(sb, Lists.newArrayList(localImports), "", "\n");
             sb.append(String.format("\npublic class %s {\n", this.name));
@@ -82,11 +81,9 @@ public class ModelDefinition extends BaseGenerator implements Definition, Import
             appendAll(sb, setters, "    ", "\n");
             appendAll(sb, getters, "    ", "\n");
             sb.append("}");
-            
-            return sb.toString();
         }
         
-        return null;
+        return sb.toString();
     }
     
     public static String getType(ModelDefinition model) {

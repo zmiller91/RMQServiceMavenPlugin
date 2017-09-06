@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins;
+package com.zm.rmqsplugins.definitions;
 
+import com.zm.rmqsplugins.base.BaseDefinition;
 import com.google.inject.internal.util.Lists;
 import java.util.HashSet;
 import java.util.Map;
@@ -15,7 +16,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class ApiDefinition extends BaseGenerator implements Definition {
+public class ApiDefinition extends BaseDefinition {
     public String name;
     public MethodDefinition[] methods;
 
@@ -45,17 +46,17 @@ public class ApiDefinition extends BaseGenerator implements Definition {
 
     @Override
     public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
-        
         StringBuilder sb = new StringBuilder();
-        sb.append(String.format("package %s;\n\n", pkg));
         
-        // Create import statements
+        // Generate the imports
         Set<String> imports = new HashSet<String>();
         imports.add(createImportStatement(pkg + ".model.*"));
         for(ModelDefinition m : models.values()) {
             imports.addAll(m.getImports());
         }
         
+        // Build the package definition and import statements
+        sb.append(String.format("package %s;\n\n", pkg));
         appendAll(sb, Lists.newArrayList(imports), "", "\n");
         
         // Create interface defnition
