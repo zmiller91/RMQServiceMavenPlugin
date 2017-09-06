@@ -50,10 +50,8 @@ public class MethodDefinition extends BaseGenerator implements Definition{
         // Create the method parameters
         if(params != null) {
             for(PropertyDefinition p : params) {
-                System.out.println(p.getName());
-                ModelDefinition model = models.get(p.ref);
-                String type = ModelDefinition.getType(model);
-                sb.append(String.format("%s %s, ", type, p.name));
+                sb.append(p.generate(pkg, models, base));
+                sb.append(", ");
             }
             
             // Remove the last ", "

@@ -12,7 +12,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class PropertyDefinition implements Definition {
+public class PropertyDefinition extends BaseGenerator implements Definition {
     public String name;
     public String ref;
 
@@ -33,5 +33,10 @@ public class PropertyDefinition implements Definition {
                     "Model (%s) has not been defined", ref
             ));
         }
+    }
+
+    @Override
+    public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
+        return String.format("%s %s", ModelDefinition.getType(models.get(ref)), name);
     }
 }

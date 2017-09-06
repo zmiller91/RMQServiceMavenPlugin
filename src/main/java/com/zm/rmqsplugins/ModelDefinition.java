@@ -6,7 +6,6 @@
 package com.zm.rmqsplugins;
 
 import com.google.inject.internal.util.Lists;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -18,12 +17,12 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public class ModelDefinition extends BaseGenerator implements Definition {
+public class ModelDefinition extends BaseGenerator implements Definition, Importable {
     public String name;
     public PropertyDefinition[] properties;
-    public String javaPackage;
+    public String javaImport;
     public String javaType;
-    public Set<String> imports;
+    public Set<String> dependencyImports;
 
     @Override
     public String getName() {
@@ -39,7 +38,7 @@ public class ModelDefinition extends BaseGenerator implements Definition {
         }
         
         // Cant be a custom class and a java class
-        if(properties != null && (javaPackage != null || javaType != null)) {
+        if(properties != null && (javaImport != null || javaType != null)) {
             throw new MojoExecutionException(String.format(
                     "Model (%s) cannot have a (properties and (javaPackage or javaType)) propety", name));
         }
@@ -57,8 +56,8 @@ public class ModelDefinition extends BaseGenerator implements Definition {
         if(properties != null) {
             
             Set<String> localImports = new HashSet<>();
-            if(imports != null) {
-                localImports.addAll(imports);
+            if(dependencyImports != null) {
+                localImports.addAll(dependencyImports);
             }
             List<String> props = new ArrayList<>();
             List<String> setters = new ArrayList<>();
@@ -67,21 +66,12 @@ public class ModelDefinition extends BaseGenerator implements Definition {
             for(PropertyDefinition pd : properties) {
                 
                 String type = getType(models.get(pd.ref));
-                props.add(createProperty(pd.name, type));
+                props.add("private " + pd.generate(pkg, models, base) + ";");
                 setters.add(createSetter(pd.name, type));
                 getters.add(createGetter(pd.name, type));
                 
-                // Create import statement
-                ModelDefinition model = models.get(pd.ref);
-                String modelImport = getPackage(model);
-                if(modelImport != null) {
-                    localImports.add(createImportStatement(modelImport));
-                    if(model.imports != null) {
-                        for(String extra : model.imports) {
-                            localImports.add(createImportStatement(extra));
-                        }
-                    }
-                }
+                // Create import statements
+                localImports.addAll(models.get(pd.ref).getImports());
             }
             
             StringBuilder sb = new StringBuilder();
@@ -103,7 +93,23 @@ public class ModelDefinition extends BaseGenerator implements Definition {
         return model.javaType != null ? model.javaType : model.name;
     }
     
-    public static String getPackage(ModelDefinition model) {
-        return model.javaPackage != null ? model.javaPackage : null;
+    public static String getJavaImport(ModelDefinition model) {
+        return model.javaImport != null ? model.javaImport : null;
+    }
+
+    @Override
+    public Set<String> getImports() {
+        Set<String> ret = new HashSet<>();
+        if(javaImport != null) {
+            ret.add(createImportStatement(javaImport));
+        }
+        
+        if(dependencyImports != null) {
+            for(String s : dependencyImports) {
+            ret.add(createImportStatement(s));
+            }
+        }
+        
+        return ret;
     }
 }

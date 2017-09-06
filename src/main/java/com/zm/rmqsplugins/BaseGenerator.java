@@ -6,11 +6,7 @@
 package com.zm.rmqsplugins;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -42,10 +38,6 @@ public abstract class BaseGenerator implements Generatable{
         catch(Exception e) {
                 throw new MojoExecutionException("Failed to write java file.", e);
         }
-    }
-    
-    protected String createImportStatement(String pkg, String type) {
-        return createImportStatement(String.format("%s.%s", pkg, type));
     }
     
     protected String createImportStatement(String pkg) {
