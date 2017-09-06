@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package com.zm.rmqsplugins.base;
+package com.zm.rmqsplugins.definitions;
 
 import com.zm.rmqsplugins.definitions.ModelDefinition;
-import com.zm.rmqsplugins.base.Definition;
+import com.zm.rmqsplugins.interfaces.Definition;
+import com.zm.rmqsplugins.interfaces.Definition;
+import com.zm.rmqsplugins.interfaces.Generatable;
 import java.io.File;
 import java.io.PrintWriter;
 import java.nio.file.Paths;

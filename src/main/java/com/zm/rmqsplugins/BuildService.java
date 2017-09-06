@@ -18,7 +18,7 @@ package com.zm.rmqsplugins;
 
 import com.zm.rmqsplugins.definitions.ModelDefinition;
 import com.zm.rmqsplugins.definitions.ServiceDefinition;
-import com.zm.rmqsplugins.base.Definition;
+import com.zm.rmqsplugins.interfaces.Definition;
 import com.google.gson.Gson;
 import com.google.gson.stream.JsonReader;
 import java.io.File;

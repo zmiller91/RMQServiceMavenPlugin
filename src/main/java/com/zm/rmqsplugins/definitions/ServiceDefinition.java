@@ -5,7 +5,6 @@
  */
 package com.zm.rmqsplugins.definitions;
 
-import com.zm.rmqsplugins.base.BaseDefinition;
 import java.nio.file.Paths;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;

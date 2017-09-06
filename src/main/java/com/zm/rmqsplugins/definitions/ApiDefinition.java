@@ -5,7 +5,6 @@
  */
 package com.zm.rmqsplugins.definitions;
 
-import com.zm.rmqsplugins.base.BaseDefinition;
 import com.google.inject.internal.util.Lists;
 import java.util.HashSet;
 import java.util.Map;
