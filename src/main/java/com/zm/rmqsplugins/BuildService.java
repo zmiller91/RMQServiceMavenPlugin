@@ -56,17 +56,23 @@ public class BuildService extends AbstractMojo {
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         try {
+
+            // Create the service definition from the definition.json
             String root = project.getBasedir().getAbsolutePath();
             Path definitionPath = Paths.get(root, definition);
             ServiceDefinition service = deserialize(definitionPath, ServiceDefinition.class);
-            
+
+            // Create a model cache
             Map<String, ModelDefinition> models = new HashMap<>();
             collectModels(service.models, models);
-            
+
+            // Create the output path
             String sources = targetFolder.getAbsolutePath();
             String packagePath = service.packageName.replaceAll("\\.", "/");
-            
-            service.generate(service.packageName, models, Paths.get(sources, packagePath).toString());
+            Path outputPath = Paths.get(sources, packagePath);
+
+            // Run the plugin
+            service.generate(service.packageName, models, outputPath.toString());
         }
         
         catch(MojoExecutionException e) {

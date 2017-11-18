@@ -36,7 +36,7 @@ public class ServiceDefinition extends BaseDefinition {
             String basePath = Paths.get(base, "model").toString();
             model.validate(models);
             String body = model.generate(pkg + ".model", models, basePath);
-            if(body != null) {
+            if(body != null && !body.isEmpty()) {
                 writeJavaFile(basePath, model.getName(), body);
             }
         }

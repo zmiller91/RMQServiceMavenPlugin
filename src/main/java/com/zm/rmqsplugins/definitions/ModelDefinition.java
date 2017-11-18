@@ -21,9 +21,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 public class ModelDefinition extends BaseDefinition implements Importable {
     public String name;
     public PropertyDefinition[] properties;
-    public String javaImport;
+    public String javaClass;
     public String javaType;
-    public Set<String> dependencyImports;
+    public Set<String> imports;
 
     @Override
     public String getName() {
@@ -39,9 +39,9 @@ public class ModelDefinition extends BaseDefinition implements Importable {
         }
         
         // Cant be a custom class and a java class
-        if(properties != null && (javaImport != null || javaType != null)) {
+        if(properties != null && (javaClass != null || javaType != null)) {
             throw new MojoExecutionException(String.format(
-                    "Model (%s) cannot have a (properties and (javaPackage or javaType)) propety", name));
+                    "Model (%s) cannot have a (properties and (javaClass or javaType)) propety", name));
         }
         
         // Property must reference a model
@@ -90,19 +90,19 @@ public class ModelDefinition extends BaseDefinition implements Importable {
     }
     
     public static String getJavaImport(ModelDefinition model) {
-        return model.javaImport != null ? model.javaImport : null;
+        return model.javaClass != null ? model.javaClass : null;
     }
 
     @Override
     public Set<String> getImports() {
         Set<String> ret = new HashSet<>();
-        if(javaImport != null) {
-            ret.add(createImportStatement(javaImport));
+        if(javaClass != null) {
+            ret.add(createImportStatement(javaClass));
         }
         
-        if(dependencyImports != null) {
-            for(String s : dependencyImports) {
-            ret.add(createImportStatement(s));
+        if(imports != null) {
+            for(String s : imports) {
+                ret.add(createImportStatement(s));
             }
         }
         
