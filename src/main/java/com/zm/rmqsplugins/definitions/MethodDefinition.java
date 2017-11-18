@@ -23,7 +23,7 @@ public class MethodDefinition extends BaseDefinition{
     }
 
     @Override
-    public void validate(Map<String, ModelDefinition> models) throws MojoExecutionException {
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {
         if(name == null) {
             throw new MojoExecutionException("Method name cannot be null");
         }
@@ -35,12 +35,12 @@ public class MethodDefinition extends BaseDefinition{
         }
     
         for(PropertyDefinition p : params) {
-            p.validate(models);
+            p.validate(models, exceptions);
         }
     }
 
     @Override
-    public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
+    public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
         
         // Create the method signature
         StringBuilder sb = new StringBuilder();
@@ -50,7 +50,7 @@ public class MethodDefinition extends BaseDefinition{
         // Create the method parameters
         if(params != null) {
             for(PropertyDefinition p : params) {
-                sb.append(p.generate(pkg, models, base));
+                sb.append(p.generate(pkg, models, exceptions, base));
                 sb.append(", ");
             }
             

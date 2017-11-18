@@ -5,6 +5,7 @@
  */
 package com.zm.rmqsplugins.interfaces;
 
+import com.zm.rmqsplugins.definitions.ExceptionDefinition;
 import com.zm.rmqsplugins.definitions.ModelDefinition;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -15,5 +16,5 @@ import org.apache.maven.plugin.MojoExecutionException;
  */
 public interface Definition {
     public String getName();
-    public void validate(Map<String, ModelDefinition> models) throws MojoExecutionException;
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException;
 }

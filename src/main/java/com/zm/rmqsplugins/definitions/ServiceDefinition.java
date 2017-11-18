@@ -17,6 +17,7 @@ public class ServiceDefinition extends BaseDefinition {
     public String packageName;
     public ApiDefinition api;
     public ModelDefinition[] models;
+    public ExceptionDefinition[] exceptions;
 
     @Override
     public String getName() {
@@ -24,26 +25,37 @@ public class ServiceDefinition extends BaseDefinition {
     }
 
     @Override
-    public void validate(Map<String, ModelDefinition> models) throws MojoExecutionException {}
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {}
 
     @Override
-    public String generate(String pkg, Map<String, ModelDefinition> models, String base) 
+    public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base)
             throws MojoExecutionException {
         
         // Generate the models
         for(String m : models.keySet()) {
             ModelDefinition model = models.get(m);
             String basePath = Paths.get(base, "model").toString();
-            model.validate(models);
-            String body = model.generate(pkg + ".model", models, basePath);
+            model.validate(models, exceptions);
+            String body = model.generate(pkg + ".model", models, exceptions, basePath);
             if(body != null && !body.isEmpty()) {
                 writeJavaFile(basePath, model.getName(), body);
             }
         }
+
+        // Generate the Exceptions
+        for(String e : exceptions.keySet()) {
+            ExceptionDefinition exception = exceptions.get(e);
+            String basePath = Paths.get(base, "exception").toString();
+            exception.validate(models, exceptions);
+            String body = exception.generate(pkg + ".exception", models, exceptions, basePath);
+            if(body != null && !body.isEmpty()) {
+                writeJavaFile(basePath, exception.getName(), body);
+            }
+        }
         
         // Generate the API
-        api.validate(models);
-        String body = api.generate(pkg, models, base);
+        api.validate(models, exceptions);
+        String body = api.generate(pkg, models, exceptions, base);
         if(body != null) {
             writeJavaFile(base, api.getName(), body);
         }

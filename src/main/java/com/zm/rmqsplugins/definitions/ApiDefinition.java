@@ -25,7 +25,7 @@ public class ApiDefinition extends BaseDefinition {
     }
 
     @Override
-    public void validate(Map<String, ModelDefinition> models) throws MojoExecutionException {
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {
         if(name == null) {
             throw new MojoExecutionException("Api name is null");
         }
@@ -39,12 +39,12 @@ public class ApiDefinition extends BaseDefinition {
         }
         
         for(MethodDefinition m : methods) {
-            m.validate(models);
+            m.validate(models, exceptions);
         }
     }
 
     @Override
-    public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
+    public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
         StringBuilder sb = new StringBuilder();
         
         // Generate the imports
@@ -65,7 +65,7 @@ public class ApiDefinition extends BaseDefinition {
         sb.append("\n");
         for(MethodDefinition m : methods) {
             sb.append("    ");
-            sb.append(m.generate(pkg, models, base));
+            sb.append(m.generate(pkg, models, exceptions, base));
         }
         
         return sb.append("}").toString();

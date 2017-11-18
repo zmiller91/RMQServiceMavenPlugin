@@ -22,7 +22,7 @@ public class PropertyDefinition extends BaseDefinition {
     }
 
     @Override
-    public void validate(Map<String, ModelDefinition> models) throws MojoExecutionException {
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {
         
         if(name == null || ref == null) {
             throw new MojoExecutionException("Property has null name or ref");
@@ -36,7 +36,7 @@ public class PropertyDefinition extends BaseDefinition {
     }
 
     @Override
-    public String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException {
+    public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
         return String.format("%s %s", ModelDefinition.getType(models.get(ref)), name);
     }
 }

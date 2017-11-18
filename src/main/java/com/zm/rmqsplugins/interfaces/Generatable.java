@@ -5,6 +5,7 @@
  */
 package com.zm.rmqsplugins.interfaces;
 
+import com.zm.rmqsplugins.definitions.ExceptionDefinition;
 import com.zm.rmqsplugins.definitions.ModelDefinition;
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -14,5 +15,5 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @author zmiller
  */
 public interface Generatable {
-    String generate(String pkg, Map<String, ModelDefinition> models, String base) throws MojoExecutionException ;
+    String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException ;
 }

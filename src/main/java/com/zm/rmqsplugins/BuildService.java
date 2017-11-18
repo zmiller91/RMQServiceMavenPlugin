@@ -16,6 +16,7 @@
  */
 package com.zm.rmqsplugins;
 
+import com.zm.rmqsplugins.definitions.ExceptionDefinition;
 import com.zm.rmqsplugins.definitions.ModelDefinition;
 import com.zm.rmqsplugins.definitions.ServiceDefinition;
 import com.zm.rmqsplugins.interfaces.Definition;
@@ -66,13 +67,17 @@ public class BuildService extends AbstractMojo {
             Map<String, ModelDefinition> models = new HashMap<>();
             collectModels(service.models, models);
 
+            // Create an exception cache
+            Map<String, ExceptionDefinition> exceptions = new HashMap<>();
+            collectExceptions(service.exceptions, exceptions);
+
             // Create the output path
             String sources = targetFolder.getAbsolutePath();
             String packagePath = service.packageName.replaceAll("\\.", "/");
             Path outputPath = Paths.get(sources, packagePath);
 
             // Run the plugin
-            service.generate(service.packageName, models, outputPath.toString());
+            service.generate(service.packageName, models, exceptions, outputPath.toString());
         }
         
         catch(MojoExecutionException e) {
@@ -90,6 +95,15 @@ public class BuildService extends AbstractMojo {
                 throw new MojoExecutionException("Duplicate model name found: " + md.getName());
             }
             map.put(md.getName(), md);
+        }
+    }
+
+    private void collectExceptions(ExceptionDefinition[] exceptions, Map<String, ExceptionDefinition> map) throws MojoExecutionException {
+        for(ExceptionDefinition ed : exceptions) {
+            if(map.containsKey(ed.name)) {
+                throw new MojoExecutionException("Duplicate exception name found: " + ed.getName());
+            }
+            map.put(ed.getName(), ed);
         }
     }
     
