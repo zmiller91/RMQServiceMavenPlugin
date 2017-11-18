@@ -7,6 +7,8 @@ package com.zm.rmqsplugins.definitions;
 
 import java.nio.file.Paths;
 import java.util.Map;
+
+import com.zm.rmqsplugins.client.Client;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
@@ -18,6 +20,7 @@ public class ServiceDefinition extends BaseDefinition {
     public ApiDefinition api;
     public ModelDefinition[] models;
     public ExceptionDefinition[] exceptions;
+    public String name;
 
     @Override
     public String getName() {
@@ -54,12 +57,20 @@ public class ServiceDefinition extends BaseDefinition {
         }
         
         // Generate the API
+        api.setServiceName(name);
         api.validate(models, exceptions);
         String body = api.generate(pkg, models, exceptions, base);
         if(body != null) {
             writeJavaFile(base, api.getName(), body);
         }
-        
+
+        // Generate the client
+        Client client = new Client(name, api);
+        client.validate(models, exceptions);
+        String c = client.generate(pkg, models, exceptions, base);
+        if(c != null) {
+            writeJavaFile(base, name + "Client", c);
+        }
         return null;
     }
 }

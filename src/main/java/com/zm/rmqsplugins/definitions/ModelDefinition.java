@@ -88,6 +88,21 @@ public class ModelDefinition extends BaseDefinition implements Importable {
     public static String getType(ModelDefinition model) {
         return model.javaType != null ? model.javaType : model.name;
     }
+
+    public static String getResultClass(String pkg, ModelDefinition model) {
+        if(model == null) {
+            return "void";
+        }
+        else if(model.javaClass != null) {
+            return model.javaClass;
+        }
+        else if(model.javaType != null) {
+            return model.javaType;
+        }
+        else {
+            return model.getName();
+        }
+    }
     
     public static String getJavaImport(ModelDefinition model) {
         return model.javaClass != null ? model.javaClass : null;

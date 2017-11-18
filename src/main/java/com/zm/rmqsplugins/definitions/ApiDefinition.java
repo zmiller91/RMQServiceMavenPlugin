@@ -16,19 +16,20 @@ import org.apache.maven.plugin.MojoExecutionException;
  * @author zmiller
  */
 public class ApiDefinition extends BaseDefinition {
-    public String name;
     public MethodDefinition[] methods;
+    private String serviceName;
+
+    public void setServiceName(String name) {
+        this.serviceName = name;
+    }
 
     @Override
     public String getName() {
-        return name;
+        return serviceName + "Api";
     }
 
     @Override
     public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {
-        if(name == null) {
-            throw new MojoExecutionException("Api name is null");
-        }
         
         Set<String> methodNames = new HashSet<>();
         for(MethodDefinition md : methods) {
@@ -44,7 +45,7 @@ public class ApiDefinition extends BaseDefinition {
     }
 
     @Override
-    public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
+    public String generate( String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
         StringBuilder sb = new StringBuilder();
         
         // Generate the imports
@@ -68,7 +69,7 @@ public class ApiDefinition extends BaseDefinition {
         appendAll(sb, Lists.newArrayList(imports), "", "\n");
         
         // Create interface defnition
-        sb.append(String.format("\npublic interface %s {", name));
+        sb.append(String.format("\npublic interface %s {", getName()));
         
         // Create method stubs
         sb.append("\n");
