@@ -53,6 +53,15 @@ public class ApiDefinition extends BaseDefinition {
         for(ModelDefinition m : models.values()) {
             imports.addAll(m.getImports());
         }
+
+        imports.add(createImportStatement("com.zm.rabbitmqservice.ClientException"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceException"));
+        if(exceptions != null) {
+            imports.add(createImportStatement(pkg + ".exception.*"));
+            for (ExceptionDefinition e : exceptions.values()) {
+                imports.addAll(e.getImports());
+            }
+        }
         
         // Build the package definition and import statements
         sb.append(String.format("package %s;\n\n", pkg));

@@ -7,6 +7,7 @@ package com.zm.rmqsplugins.definitions;
 
 import java.util.Map;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.codehaus.plexus.util.StringUtils;
 
 /**
  *
@@ -16,6 +17,7 @@ public class MethodDefinition extends BaseDefinition{
     public String name;
     public String result;
     public PropertyDefinition[] params;
+    public String[] throwables;
 
     @Override
     public String getName() {
@@ -32,6 +34,15 @@ public class MethodDefinition extends BaseDefinition{
             throw new MojoExecutionException(String.format(
                     "Model (%s) has not been defined", result
             ));
+        }
+
+        // Throwable must reference an exception
+        if(throwables != null) {
+            for (String t : throwables) {
+                if (exceptions != null && !exceptions.containsKey(t)) {
+                    throw new MojoExecutionException(t + " is not defined in the exceptions block");
+                }
+            }
         }
     
         for(PropertyDefinition p : params) {
@@ -61,7 +72,10 @@ public class MethodDefinition extends BaseDefinition{
         }
         
         // Close the method definition
-        sb.append(String.format(");\n", returnType, name));
+        sb.append(String.format(") throws ServiceException, ClientException"
+                + (throwables != null && throwables.length > 0 ? ", " + StringUtils.join(throwables, ",") : "")
+                + ";\n", returnType, name));
+
         return sb.toString();
     }
 }
