@@ -23,6 +23,7 @@ public class Client extends BaseDefinition implements Generatable {
 
         // Generate the imports
         Set<String> imports = new HashSet<String>();
+        imports.add(createImportStatement(pkg + ".configuration." + serviceName + "Configuration"));
         imports.add(createImportStatement(pkg + ".model.*"));
         for(ModelDefinition m : models.values()) {
             imports.addAll(m.getImports());
@@ -46,10 +47,10 @@ public class Client extends BaseDefinition implements Generatable {
         appendAll(sb, Lists.newArrayList(imports), "", "\n");
         sb.append(String.format(
                 "\npublic class %sClient extends RMQClient implements %s {\n" +
-                "    public %sClient(String host, String queue, int executorPoolSize) throws ClientException {\n" +
-                "        super(host, queue, executorPoolSize);\n" +
+                "    public %sClient(%sConfiguration.Host host, %sConfiguration.Channel channel, int executorPoolSize) throws ClientException {\n" +
+                "        super(host.getValue(), channel.getValue(), executorPoolSize);\n" +
                 "    }\n",
-                serviceName, api.getName(), serviceName));
+                serviceName, api.getName(), serviceName, serviceName, serviceName));
 
         // Create method stubs
         for(MethodDefinition m : api.methods) {

@@ -1,12 +1,13 @@
 package com.zm.rmqsplugins.definitions;
 
 import com.google.inject.internal.util.Lists;
+import com.zm.rmqsplugins.interfaces.Generatable;
 import com.zm.rmqsplugins.interfaces.Importable;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.util.*;
 
-public class ExceptionDefinition extends BaseDefinition implements Importable {
+public class ExceptionDefinition extends BaseDefinition implements Importable, Generatable {
     public String name;
     public PropertyDefinition[] properties;
     public String javaClass;

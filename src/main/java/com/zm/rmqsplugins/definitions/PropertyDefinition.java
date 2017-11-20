@@ -6,13 +6,15 @@
 package com.zm.rmqsplugins.definitions;
 
 import java.util.Map;
+
+import com.zm.rmqsplugins.interfaces.Generatable;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  *
  * @author zmiller
  */
-public class PropertyDefinition extends BaseDefinition {
+public class PropertyDefinition extends BaseDefinition implements Generatable {
     public String name;
     public String ref;
 

@@ -77,6 +77,7 @@ public class BuildService extends AbstractMojo {
             Path outputPath = Paths.get(sources, packagePath);
 
             // Run the plugin
+            service.validate(models, exceptions);
             service.generate(service.packageName, models, exceptions, outputPath.toString());
         }
         

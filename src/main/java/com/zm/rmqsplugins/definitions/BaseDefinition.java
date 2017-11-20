@@ -20,7 +20,7 @@ import org.apache.maven.plugin.MojoExecutionException;
  *
  * @author zmiller
  */
-public abstract class BaseDefinition implements Definition, Generatable {
+public abstract class BaseDefinition implements Definition {
     
     
     protected void writeJavaFile(String path, String name, String body) throws MojoExecutionException {

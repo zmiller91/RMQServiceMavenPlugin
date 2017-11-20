@@ -9,14 +9,17 @@ import java.nio.file.Paths;
 import java.util.Map;
 
 import com.zm.rmqsplugins.client.Client;
+import com.zm.rmqsplugins.configuration.Configuration;
+import com.zm.rmqsplugins.interfaces.Generatable;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  *
  * @author zmiller
  */
-public class ServiceDefinition extends BaseDefinition {
+public class ServiceDefinition extends BaseDefinition implements Generatable {
     public String packageName;
+    public ConfigurationDefinition configuration;
     public ApiDefinition api;
     public ModelDefinition[] models;
     public ExceptionDefinition[] exceptions;
@@ -28,7 +31,11 @@ public class ServiceDefinition extends BaseDefinition {
     }
 
     @Override
-    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {}
+    public void validate(Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions) throws MojoExecutionException {
+        if(configuration == null) {
+            throw new MojoExecutionException("Configuration cannot be null");
+        }
+    }
 
     @Override
     public String generate(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base)
@@ -62,6 +69,14 @@ public class ServiceDefinition extends BaseDefinition {
         String body = api.generate(pkg, models, exceptions, base);
         if(body != null) {
             writeJavaFile(base, api.getName(), body);
+        }
+
+        // Generate the configuration
+        Configuration config = new Configuration(name, configuration);
+        config.validate(models, exceptions);
+        String cfg = config.generate(pkg + ".configuration", models, exceptions, base);
+        if(cfg != null) {
+            writeJavaFile(base + "/configuration", name + "Configuration", cfg);
         }
 
         // Generate the client

@@ -9,13 +9,15 @@ import com.google.inject.internal.util.Lists;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import com.zm.rmqsplugins.interfaces.Generatable;
 import org.apache.maven.plugin.MojoExecutionException;
 
 /**
  *
  * @author zmiller
  */
-public class ApiDefinition extends BaseDefinition {
+public class ApiDefinition extends BaseDefinition implements Generatable {
     public MethodDefinition[] methods;
     private String serviceName;
 

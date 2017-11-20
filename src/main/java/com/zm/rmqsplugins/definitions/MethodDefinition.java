@@ -9,6 +9,7 @@ import java.util.Arrays;
 import java.util.Map;
 
 import com.sun.javafx.binding.StringFormatter;
+import com.zm.rmqsplugins.interfaces.Generatable;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.StringUtils;
 
@@ -16,7 +17,7 @@ import org.codehaus.plexus.util.StringUtils;
  *
  * @author zmiller
  */
-public class MethodDefinition extends BaseDefinition{
+public class MethodDefinition extends BaseDefinition implements Generatable {
     public String name;
     public String result;
     public PropertyDefinition[] params;
