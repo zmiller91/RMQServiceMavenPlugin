@@ -32,12 +32,20 @@ public class MethodDefinition extends BaseDefinition{
         if(name == null) {
             throw new MojoExecutionException("Method name cannot be null");
         }
-        
+
+        // Result must reference a model
         if(result != null && !models.containsKey(result)) {
             throw new MojoExecutionException(String.format(
                     "Model (%s) has not been defined", result
             ));
         }
+//
+//        // Result must not be a standard java Object
+//        if(result != null && !(models.get(result).javaType == null && models.get(result).javaClass == null)) {
+//            throw new MojoExecutionException(String.format(
+//                    "Method (%s) cannot return a standard Java object, return values must be custom objects defined in definition.json", name
+//            ));
+//        }
 
         // Throwable must reference an exception
         if(throwables != null) {
