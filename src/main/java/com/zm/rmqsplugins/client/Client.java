@@ -34,7 +34,7 @@ public class Client extends BaseDefinition implements Generatable {
         imports.add(createImportStatement("com.zm.rabbitmqservice.ClientException"));
         imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceException"));
         imports.add(createImportStatement("com.zm.rabbitmqservice.RMQClient"));
-        if(exceptions != null) {
+        if(exceptions != null && !exceptions.isEmpty()) {
             imports.add(createImportStatement(pkg + ".exception.*"));
             for (ExceptionDefinition e : exceptions.values()) {
                 imports.addAll(e.getImports());
@@ -47,7 +47,7 @@ public class Client extends BaseDefinition implements Generatable {
         appendAll(sb, Lists.newArrayList(imports), "", "\n");
         sb.append(String.format(
                 "\npublic class %sClient extends RMQClient implements %s {\n" +
-                "    public %sClient(%sConfiguration.Host host, %sConfiguration.Channel channel, int executorPoolSize) throws ClientException {\n" +
+                "    public %sClient(%sConfiguration.Host host, %sConfiguration.Channel channel, int executorPoolSize) {\n" +
                 "        super(host.getValue(), channel.getValue(), executorPoolSize);\n" +
                 "    }\n",
                 serviceName, api.getName(), serviceName, serviceName, serviceName));

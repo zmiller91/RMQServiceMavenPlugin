@@ -65,11 +65,15 @@ public class BuildService extends AbstractMojo {
 
             // Create a model cache
             Map<String, ModelDefinition> models = new HashMap<>();
-            collectModels(service.models, models);
+            if(service.models != null) {
+                collectModels(service.models, models);
+            }
 
             // Create an exception cache
             Map<String, ExceptionDefinition> exceptions = new HashMap<>();
-            collectExceptions(service.exceptions, exceptions);
+            if(service.exceptions != null) {
+                collectExceptions(service.exceptions, exceptions);
+            }
 
             // Create the output path
             String sources = targetFolder.getAbsolutePath();
