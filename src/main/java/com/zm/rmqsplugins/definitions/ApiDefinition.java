@@ -59,6 +59,9 @@ public class ApiDefinition extends BaseDefinition implements Generatable {
 
         imports.add(createImportStatement("com.zm.rabbitmqservice.ClientException"));
         imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceException"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceUnavailableException"));
+        imports.add(createImportStatement("java.util.concurrent.TimeoutException"));
+        imports.add(createImportStatement("java.io.IOException"));
         if(exceptions != null && !exceptions.isEmpty()) {
             imports.add(createImportStatement(pkg + ".exception.*"));
             for (ExceptionDefinition e : exceptions.values()) {

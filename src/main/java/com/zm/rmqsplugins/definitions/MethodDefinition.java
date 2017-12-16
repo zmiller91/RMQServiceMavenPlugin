@@ -84,7 +84,7 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
         }
         
         // Close the method definition
-        sb.append(String.format(") throws ServiceException, ClientException"
+        sb.append(String.format(") throws TimeoutException, IOException, ServiceUnavailableException, ServiceException, ClientException"
                 + (throwables != null && throwables.length > 0 ? ", " + StringUtils.join(throwables, ",") : "")
                 + ";\n", returnType, name));
 
@@ -93,10 +93,14 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
 
     public String generateMethodBody(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
 
-        String[] allExceptions = new String[2];
+        String[] allExceptions = new String[5];
         if(throwables != null && throwables.length != 0) {
-            allExceptions = Arrays.copyOf(throwables, throwables.length + 2);
+            allExceptions = Arrays.copyOf(throwables, throwables.length + 5);
         }
+
+        allExceptions[allExceptions.length - 5] = "IOException";
+        allExceptions[allExceptions.length - 4] = "TimeoutException";
+        allExceptions[allExceptions.length - 3] = "ServiceUnavailableException";
         allExceptions[allExceptions.length - 2] = "ServiceException";
         allExceptions[allExceptions.length - 1] = "ClientException";
 

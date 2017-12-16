@@ -31,9 +31,12 @@ public class Client extends BaseDefinition implements Generatable {
 
         imports.add(createImportStatement("com.google.gson.Gson"));
         imports.add(createImportStatement("com.google.gson.JsonArray"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.RMQClient"));
         imports.add(createImportStatement("com.zm.rabbitmqservice.ClientException"));
         imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceException"));
-        imports.add(createImportStatement("com.zm.rabbitmqservice.RMQClient"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceUnavailableException"));
+        imports.add(createImportStatement("java.util.concurrent.TimeoutException"));
+        imports.add(createImportStatement("java.io.IOException"));
         if(exceptions != null && !exceptions.isEmpty()) {
             imports.add(createImportStatement(pkg + ".exception.*"));
             for (ExceptionDefinition e : exceptions.values()) {
