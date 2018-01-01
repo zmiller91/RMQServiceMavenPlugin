@@ -31,11 +31,12 @@ public class Client extends BaseDefinition implements Generatable {
 
         imports.add(createImportStatement("com.google.gson.Gson"));
         imports.add(createImportStatement("com.google.gson.JsonArray"));
-        imports.add(createImportStatement("com.zm.rabbitmqservice.RMQClient"));
-        imports.add(createImportStatement("com.zm.rabbitmqservice.ClientException"));
-        imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceException"));
-        imports.add(createImportStatement("com.zm.rabbitmqservice.ServiceUnavailableException"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.client.RMQClient"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.client.ClientException"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.service.ServiceException"));
+        imports.add(createImportStatement("com.zm.rabbitmqservice.service.ServiceUnavailableException"));
         imports.add(createImportStatement("java.util.concurrent.TimeoutException"));
+        imports.add(createImportStatement("java.util.concurrent.ExecutorService"));
         imports.add(createImportStatement("java.io.IOException"));
         if(exceptions != null && !exceptions.isEmpty()) {
             imports.add(createImportStatement(pkg + ".exception.*"));
@@ -50,10 +51,10 @@ public class Client extends BaseDefinition implements Generatable {
         appendAll(sb, Lists.newArrayList(imports), "", "\n");
         sb.append(String.format(
                 "\npublic class %sClient extends RMQClient implements %s {\n" +
-                "    public %sClient(%sConfiguration.Host host, %sConfiguration.Channel channel, int executorPoolSize) {\n" +
-                "        super(host.getValue(), channel.getValue(), executorPoolSize);\n" +
+                "    public %sClient(%sConfiguration.Host host, %sConfiguration.Channel channel) {\n" +
+                "        super(host.getValue(), channel.getValue());\n" +
                 "    }\n",
-                serviceName, api.getName(), serviceName, serviceName, serviceName));
+                serviceName, api.getName(), serviceName, serviceName, serviceName, serviceName, serviceName, serviceName));
 
         // Create method stubs
         for(MethodDefinition m : api.methods) {

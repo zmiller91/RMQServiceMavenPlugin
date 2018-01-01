@@ -8,7 +8,6 @@ package com.zm.rmqsplugins.definitions;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.sun.javafx.binding.StringFormatter;
 import com.zm.rmqsplugins.interfaces.Generatable;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.codehaus.plexus.util.StringUtils;
@@ -21,7 +20,7 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
     public String name;
     public String result;
     public PropertyDefinition[] params;
-    public String[] throwables;
+    public String[] exceptions;
 
     @Override
     public String getName() {
@@ -40,17 +39,17 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
                     "Model (%s) has not been defined", result
             ));
         }
-//
-//        // Result must not be a standard java Object
-//        if(result != null && !(models.get(result).javaType == null && models.get(result).javaClass == null)) {
-//            throw new MojoExecutionException(String.format(
-//                    "Method (%s) cannot return a standard Java object, return values must be custom objects defined in definition.json", name
-//            ));
-//        }
+
+        // Result must not be a standard java Object
+        if(result != null && !(models.get(result).javaType == null && models.get(result).javaClass == null)) {
+            throw new MojoExecutionException(String.format(
+                    "Method (%s) cannot return a standard Java object, return values must be custom objects defined in definition.json", name
+            ));
+        }
 
         // Throwable must reference an exception
-        if(throwables != null) {
-            for (String t : throwables) {
+        if(this.exceptions != null) {
+            for (String t : this.exceptions) {
                 if (exceptions != null && !exceptions.containsKey(t)) {
                     throw new MojoExecutionException(t + " is not defined in the exceptions block");
                 }
@@ -85,7 +84,7 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
         
         // Close the method definition
         sb.append(String.format(") throws TimeoutException, IOException, ServiceUnavailableException, ServiceException, ClientException"
-                + (throwables != null && throwables.length > 0 ? ", " + StringUtils.join(throwables, ",") : "")
+                + (this.exceptions != null && this.exceptions.length > 0 ? ", " + StringUtils.join(this.exceptions, ",") : "")
                 + ";\n", returnType, name));
 
         return sb.toString();
@@ -94,8 +93,8 @@ public class MethodDefinition extends BaseDefinition implements Generatable {
     public String generateMethodBody(String pkg, Map<String, ModelDefinition> models, Map<String, ExceptionDefinition> exceptions, String base) throws MojoExecutionException {
 
         String[] allExceptions = new String[5];
-        if(throwables != null && throwables.length != 0) {
-            allExceptions = Arrays.copyOf(throwables, throwables.length + 5);
+        if(this.exceptions != null && this.exceptions.length != 0) {
+            allExceptions = Arrays.copyOf(this.exceptions, this.exceptions.length + 5);
         }
 
         allExceptions[allExceptions.length - 5] = "IOException";
